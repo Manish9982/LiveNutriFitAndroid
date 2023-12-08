@@ -127,7 +127,7 @@ export default function WelcomeScreenBeforeBottomTabs({ navigation }) {
             setTimeout(() => {
                 setValueOfProgressBar(0.8)
                 runBarToLevelNine()
-                setCustomText(strings.AssigningyouaFunctionalCoach)
+                setCustomText(strings.PreparingYourPersonalizedExercisePlan)
             }, 1000)
         }
         const runBarToLevelNine = () => {
@@ -135,14 +135,14 @@ export default function WelcomeScreenBeforeBottomTabs({ navigation }) {
                 setValueOfProgressBar(0.9)
                 setColorOfCheckBox3("green")
                 runBarToLevelTen()
-                setCustomText(strings.AssigningyouaFunctionalCoach)
+                setCustomText(strings.PreparingYourPersonalizedExercisePlan)
             }, 1000)
         }
         const runBarToLevelTen = () => {
             setTimeout(() => {
                 setValueOfProgressBar(1)
                 progres.value = withSequence(withTiming(1.1), withSpring(1))
-                setCustomText(strings.AssigningyouaFunctionalCoach)
+                setCustomText(strings.PreparingYourPersonalizedExercisePlan)
                 setCustomText("")
                 setFlag(2)
                 //navigation.replace("PlanChoosePromptAtStartup")
