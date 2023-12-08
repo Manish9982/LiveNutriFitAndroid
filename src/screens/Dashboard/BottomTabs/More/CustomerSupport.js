@@ -272,6 +272,7 @@ const CustomerSupport = ({ navigation }) => {
             underlineColor={"transparent"}
             value={message}
             multiline={true}
+            numberOfLines={5}
 
             onChangeText={(textmessage) => { setMessage(textmessage) }}
           />

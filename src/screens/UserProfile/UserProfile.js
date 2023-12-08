@@ -228,6 +228,8 @@ const UserProfile = ({ navigation }) => {
         setLastRefresh(`${(date.getHours()).toString().padStart(2, 0)}:${(date.getMinutes()).toString().padStart(2, 0)}`)
     }
 
+    console.log("dataFromApi?.data?.[0]?.goal?.answer====>", dataFromApi?.data?.[0]?.goal)
+
     return (
         <View>
             <StatusBar backgroundColor={colors.GREEN} />
@@ -255,7 +257,7 @@ const UserProfile = ({ navigation }) => {
                         />
                     }
                 >
-                    <View style={{ flexDirection: 'row', }}>
+                    <View style={{ flexDirection: 'row', marginTop: H * 0.05 }}>
                         <TouchableOpacity onPress={() => { setCamVisible(true) }}>
                             <Image source={{ uri: dataFromApi?.data[0].profile_pic }}
                                 style={styles.userImageContainer}
@@ -338,7 +340,7 @@ const UserProfile = ({ navigation }) => {
 
                         <View style={{ justifyContent: 'center' }}>
                             <Text style={styles.text2}>{dataFromApi?.data[0].name}</Text>
-                            <Text style={styles.text1}>{dataFromApi?.data[0].food_type == true ? "Vegetarian" : "Non-Vegetarian"}</Text>
+                            <Text style={styles.text1}>{dataFromApi?.data?.[0]?.food_type?.answer.join(",")}</Text>
                         </View>
                     </View>
 
@@ -346,7 +348,7 @@ const UserProfile = ({ navigation }) => {
                     <>
                         {dataFromApi?.data[0].mobile == null || dataFromApi?.data[0].mobile == "" ? null :
                             <>
-                                <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flexDirection: 'row', marginTop: H * 0.05 }}>
                                     <Image source={require('../../assets/icons/phone-call.png')}
                                         style={styles.userIconContainer} />
                                     <Text style={styles.text1}>{dataFromApi?.data[0].mobile}</Text>
@@ -355,9 +357,11 @@ const UserProfile = ({ navigation }) => {
                     </>
 
                     <>
-                        {(dataFromApi?.data[0]?.email == "null" || dataFromApi?.data[0].email == null || dataFromApi?.data[0].email == "") ? null :
+                        {(dataFromApi?.data[0]?.email == "null" ||
+                            dataFromApi?.data[0].email == null ||
+                            dataFromApi?.data[0].email == "") ? null :
                             <>
-                                <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flexDirection: 'row', marginTop: H * 0.04 }}>
                                     <Image source={require('../../assets/icons/email.png')}
                                         style={styles.userIconContainer} />
                                     <Text style={styles.text1}>{dataFromApi?.data[0].email}</Text>
@@ -368,20 +372,22 @@ const UserProfile = ({ navigation }) => {
 
                     </>
                     <Text style={{
-                        position: "absolute",
-                        left: W * 0.42,
-                        top: H * 0.2,
+
+                        top: H * 0.04,
                         width: W * 0.57,
                         fontFamily: fontFamily.bold,
                         borderWidth: 0.5,
+                        alignSelf: 'center',
+                        textAlign: 'center',
                         paddingHorizontal: W * 0.01,
                     }}>{strings.LastUpdatedat} {lastRefresh}</Text>
 
 
 
-                    <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flexDirection: 'row', marginTop: H * 0.1 }}>
                         <View style={styles.containersAdjacent}>
-                            <Text style={[styles.text2, { fontSize: fontSizes.XXXL }]}>{dataFromApi?.data[0].total_point}</Text>
+                            <Text style={[styles.text2, { fontSize: fontSizes.XXXL }]}>
+                                {dataFromApi?.data[0].total_point}</Text>
                             <Text style={styles.text1}>{strings.TotalPoints}</Text>
                         </View>
 
@@ -482,16 +488,16 @@ const UserProfile = ({ navigation }) => {
 
 
 
-                    <TouchableOpacity onPress={() => { setBioModal(true) }}>
+                    {/* <TouchableOpacity onPress={() => { setBioModal(true) }}>
                         <View style={{ flexDirection: 'row' }}>
-                            {/* <Image source={require('../../assets/icons/inverted-commas.png')}
-                                style={styles.userIconContainer} /> */}
+                         <Image source={require('../../assets/icons/inverted-commas.png')}
+                                style={styles.userIconContainer} /> 
                             <View>
-                                {/* <Text style={styles.text2}>{strings.Bio}</Text>
-                                <Text style={styles.text1}>{dataFromApi?.data?.[0]?.bio == "" ? "Write something about youself" : dataFromApi?.data?.[0]?.bio}</Text> */}
+                                <Text style={styles.text2}>{strings.Bio}</Text>
+                                <Text style={styles.text1}>{dataFromApi?.data?.[0]?.bio == "" ? "Write something about youself" : dataFromApi?.data?.[0]?.bio}</Text> 
                             </View>
                         </View>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     {/* <TouchableOpacity>
                         <View style={{ flexDirection: 'row' }}>
                             <Image source={require('../../assets/icons/pin.png')}
@@ -503,7 +509,7 @@ const UserProfile = ({ navigation }) => {
                         </View>
                     </TouchableOpacity> */}
                     <TouchableOpacity onPress={() => { navigation.navigate("editProfile") }}>
-                        <View style={{ flexDirection: 'row' }}>
+                        <View style={{ flexDirection: 'row', marginTop: H * 0.05 }}>
                             <Image source={require('../../assets/icons/about.png')}
                                 style={styles.userIconContainer} />
                             <View>
@@ -512,16 +518,16 @@ const UserProfile = ({ navigation }) => {
                             </View>
                         </View>
                     </TouchableOpacity>
-                    {/* <TouchableOpacity>
-                        <View style={{ flexDirection: 'row' }}>
+                    <TouchableOpacity>
+                        <View style={{ flexDirection: 'row', marginTop: H * 0.05 }}>
                             <Image source={require('../../assets/icons/report.png')}
                                 style={styles.userIconContainer} />
                             <View>
                                 <Text style={styles.text2}>{strings.goals}</Text>
-                                <Text style={styles.text1}>{dataFromApi?.data?.[0]?.goal}</Text>
+                                <Text style={styles.text1}>{dataFromApi?.data?.[0]?.goal?.answer.join(",")}</Text>
                             </View>
                         </View>
-                    </TouchableOpacity> */}
+                    </TouchableOpacity>
                     {/*  <TouchableOpacity>
                         <View style={{ flexDirection: 'row' }}>
                             <Image source={require('../../assets/icons/cutlery.png')}
@@ -533,14 +539,14 @@ const UserProfile = ({ navigation }) => {
                         </View>
                     </TouchableOpacity>*/}
                     <TouchableOpacity>
-                        <View style={{ flexDirection: 'row' }}>
+                        {/* <View style={{ flexDirection: 'row' }}>
                             <Image source={require('../../assets/icons/credit-card.png')}
                                 style={styles.userIconContainer} />
                             <View>
                                 <Text style={styles.text2}>{strings.PaymentDetails}</Text>
                                 <Text style={styles.text1}>{strings.YourPaymentDetails}</Text>
                             </View>
-                        </View>
+                        </View> */}
                     </TouchableOpacity>
 
                 </ScrollView >
@@ -560,7 +566,6 @@ const styles = StyleSheet.create({
     {
         height: HEIGHT,
         width: WIDTH,
-        justifyContent: 'space-evenly',
         paddingBottom: HEIGHT * 0.1,
 
     },
