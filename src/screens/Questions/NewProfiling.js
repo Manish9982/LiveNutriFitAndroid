@@ -19,6 +19,16 @@ function getTimestamp10YearsAgo() {
     return tenYearsAgo.getTime();
   }
 
+  const OPTION1 = [
+    "No restrictions here",
+    "No dairy",
+    "No Egg",
+    "No Meat",
+    "No Fish",
+    "No Nuts",
+    "No Gluten/Wheat"
+  ]
+
 const NewProfiling = ({ navigation }) => {
 
     const [myData, setMyData] = useState([])
@@ -179,7 +189,7 @@ const NewProfiling = ({ navigation }) => {
             return (
                 <View style={styles.flatlist}>
                     <FlatList
-                        data={myData?.data?.option}
+                        data={OPTION1}
                         renderItem={type === "1" ? renderItem : renderItemType2}
                         keyExtractor={(item, index) => `${index}`} // Use a unique key
                         persistentScrollbar={false}
@@ -516,11 +526,7 @@ const styles = StyleSheet.create(({
         textAlign: "center",
         fontSize: fontSizes.XL
     },
-    optionText2: {
-        width: W * 0.65,
-        fontFamily: "Montserrat-Medium",
-        fontSize: fontSizes.XL, marginLeft: 10
-    },
+
     optionlayout: {
         borderRadius: 8,
         margin: 10,
@@ -534,6 +540,13 @@ const styles = StyleSheet.create(({
         paddingVertical: H * 0.025,
         paddingHorizontal: W * 0.0
     },
+    
+    optionText2: {
+        width: W * 0.65,
+        fontFamily: "Montserrat-Medium",
+        fontSize: fontSizes.XL, marginLeft: 10
+    },
+    
 
     textinput: {
         fontSize: fontSizes.XL,

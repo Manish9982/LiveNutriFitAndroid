@@ -31,7 +31,10 @@ export const colors = {
    BUTTON_ORANGE: '#f7a14e',
    FONT_BLACK: '#3f4853',
    GREEN3: '#bbf562',
-   LIGHT_GREEN: '#eef8e5'
+   LIGHT_GREEN: '#eef8e5',
+   BLACK:'#000',
+   DARK_GRAY:'#D3D3D3',
+   LIGHT_GRAY:'lightGrey'
 };
 
 export const fontSizes = {
