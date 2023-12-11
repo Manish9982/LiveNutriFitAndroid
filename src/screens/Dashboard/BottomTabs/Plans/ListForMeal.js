@@ -58,7 +58,7 @@ const ListForMeal = (props) => {
         formdata.append("id", props.Id);
         formdata.append("status", "1")
         formdata.append("repeat", "0")
-        const result = await PostApiData('DashboardApi1/followunfollowsinglemeal', formdata)
+        const result = await PostApiData('followunfollowsinglemeal', formdata)
         if (result.status == '200') {
             setLikedMeal(true)
             setVisibleModalForRepeat(true)
@@ -77,7 +77,7 @@ const ListForMeal = (props) => {
         formdata.append("id", props.Id);
         formdata.append("status", "0")
         formdata.append("repeat", "0")
-        const result1 = await PostApiData('DashboardApi1/followunfollowsinglemeal', formdata)
+        const result1 = await PostApiData('followunfollowsinglemeal', formdata)
         console.log("FOLLOW UNFOLLOW", result1)
 
         if (result1.status == '200') {
