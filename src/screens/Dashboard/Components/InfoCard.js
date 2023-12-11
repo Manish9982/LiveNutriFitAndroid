@@ -296,12 +296,14 @@ const InfoCard = (props) => {
     const firstChoiceTrigger = async (heading) => {
 
         if (heading == 'Monitoring') {
+            
             setBgclr1(
                 (prev) => {
                     if (prev == colors.BEST_COLOR) {
                         return "white"
                     }
                     else {
+                        props?.onPressWeight(prev => !prev)
                         return colors.BEST_COLOR
                     }
                 }
@@ -330,12 +332,14 @@ const InfoCard = (props) => {
     }
     const secondChoiceTrigger = async (heading) => {
         if (heading == 'Monitoring') {
+            
             setBgclr2(
                 (prev) => {
                     if (prev == colors.BEST_COLOR) {
                         return "white"
                     }
                     else {
+                        props?.onPressSugar(prev => !prev)
                         return colors.BEST_COLOR
                     }
                 }
@@ -371,6 +375,7 @@ const InfoCard = (props) => {
                         return "white"
                     }
                     else {
+                        props?.onPressBP(prev => !prev)
                         return colors.BEST_COLOR
                     }
                 }

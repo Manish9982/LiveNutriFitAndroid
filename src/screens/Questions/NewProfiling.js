@@ -10,24 +10,14 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 function getTimestamp10YearsAgo() {
     // Get the current date
     const currentDate = new Date();
-  
+
     // Subtract 10 years from the current date
     const tenYearsAgo = new Date(currentDate);
     tenYearsAgo.setFullYear(currentDate.getFullYear() - 10);
-  
+
     // Return the timestamp in milliseconds
     return tenYearsAgo.getTime();
-  }
-
-  const OPTION1 = [
-    "No restrictions here",
-    "No dairy",
-    "No Egg",
-    "No Meat",
-    "No Fish",
-    "No Nuts",
-    "No Gluten/Wheat"
-  ]
+}
 
 const NewProfiling = ({ navigation }) => {
 
@@ -189,7 +179,7 @@ const NewProfiling = ({ navigation }) => {
             return (
                 <View style={styles.flatlist}>
                     <FlatList
-                        data={OPTION1}
+                        data={myData?.data?.option}
                         renderItem={type === "1" ? renderItem : renderItemType2}
                         keyExtractor={(item, index) => `${index}`} // Use a unique key
                         persistentScrollbar={false}
@@ -540,13 +530,13 @@ const styles = StyleSheet.create(({
         paddingVertical: H * 0.025,
         paddingHorizontal: W * 0.0
     },
-    
+
     optionText2: {
         width: W * 0.65,
         fontFamily: "Montserrat-Medium",
         fontSize: fontSizes.XL, marginLeft: 10
     },
-    
+
 
     textinput: {
         fontSize: fontSizes.XL,

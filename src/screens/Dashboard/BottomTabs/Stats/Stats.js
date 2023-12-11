@@ -63,13 +63,9 @@ const Stats = (props) => {
   const [refreshing, setRefreshing] = useState(false)
   const [name, setName] = useState("")
   ///////////////////////////////////////////////
-  const [editCurrentWeight, setEditCurrentWeight] = useState(false)
-  const [editTargetWeight, setEditTargetWeight] = useState(false)
-  const [editFastingSugar, setEditFastingSugar] = useState(false)
-  const [editNonFastingSugar, setEditNonFastingSugar] = useState(false)
-  const [editSystolic, setEditSystolic] = useState(false)
-  const [editDiastolic, setEditDiastolic] = useState(false)
-  const [editBpm, setEditBpm] = useState(false)
+  const [editWeights, setEditWeights] = useState(false)
+  const [editSugar, setEditSugar] = useState(false)
+  const [editBp, setEditBp] = useState(false)
   /////////////////////////////////////////////////
   const [currentWeight, setCurrentWeight] = useState("")
   const [targetWeight, setTargetWeight] = useState("")
@@ -142,7 +138,7 @@ const Stats = (props) => {
 
   useEffect(() => {
     if (isFocused) {
-     // getUserType()  // hide upgarde popup- 01 dec
+      // getUserType()  // hide upgarde popup- 01 dec
     }
 
   }, [isFocused])
@@ -172,7 +168,7 @@ const Stats = (props) => {
   }
 
 
-  
+
 
   const getPaidUserStatus = async () => {
     const paidUserStatus = await getDataFromLocalStorage("paiduserStatus")
@@ -269,21 +265,23 @@ const Stats = (props) => {
   }
 
 
-  const updateValueCurrentWeight = async () => {
-    if (currentWeight == "" || currentWeight.length == 0) {
-      ShortToast('Required Field', 'error', '')
+  const updateWeightValues = async () => {
+    if (currentWeight == "" || currentWeight.length == 0 || targetWeight == "" || targetWeight.length == 0) {
+      ShortToast('Required Field is missing', 'error', '')
     }
     else {
       var formdata = new FormData();
       const temp = await getDataFromLocalStorage("user_id")
       formdata.append("user_id", JSON.parse(temp));
       formdata.append("type", "Weight");
-      formdata.append("valuename", "current weight");
-      formdata.append("value", currentWeight)
-      const result = await PostApiData('updateuserpaidhealthplan', formdata)
-      getDataForPaidUser()
-      ShortToast('Success', 'success', '')
-      setEditCurrentWeight(false)
+      formdata.append("current_weight", currentWeight)
+      formdata.append("target_weight", targetWeight)
+      const result = await PostApiData('updateuserhealthplan', formdata)
+      if (result?.status == "200") {
+        getDataForPaidUser()
+        ShortToast('Success', 'success', '')
+        setEditWeights(false)
+      }
     }
   }
 
@@ -305,27 +303,27 @@ const Stats = (props) => {
       const result = await PostApiData('updateuserpaidhealthplan', formdata)
       getDataForPaidUser()
       ShortToast(result.message, 'success', '')
-      setEditTargetWeight(false)
+      setEditWeights(false)
     }
   }
 
-  const updateValueFastingSugar = async () => {
-    if (fastingSugar == "" || fastingSugar.includes(".") || fastingSugar.includes(",") || fastingSugar.includes("-") || fastingSugar.includes(" ")) {
+  const updateSugarValues = async () => {
+    if (fastingSugar == "" || fastingSugar.includes(".") || fastingSugar.includes(",") || fastingSugar.includes("-") || fastingSugar.includes(" ") || nonFastingSugar == "" || nonFastingSugar.includes(".") || nonFastingSugar.includes(",") || nonFastingSugar.includes("-") || nonFastingSugar.includes(" ")) {
       ShortToast('Invalid Input', 'error', '')
     }
-    else if (fastingSugar < 55) {
-      ShortToast("Your fasting sugar seems to be critically low! Kindly consult a Doctor", 'error', '')
+    else if (fastingSugar < 55 || nonFastingSugar < 70) {
+      ShortToast("Your sugar seems to be critically low! Kindly consult a Doctor", 'error', '')
       const temp = await getDataFromLocalStorage('user_id')
       var formdata = new FormData();
       formdata.append("user_id", JSON.parse(temp));
-      formdata.append("valuename", "fasting");
       formdata.append("type", "Sugar");
-      formdata.append("value", fastingSugar);
+      formdata.append("fasting", fastingSugar);
+      formdata.append("nonfasting", nonFastingSugar);
 
-      const result = await PostApiData('updateuserpaidhealthplan', formdata)
+      const result = await PostApiData('updateuserhealthplan', formdata)
       if (result.status == 200) {
         getDataForPaidUser()
-        setEditFastingSugar(false)
+        setEditSugar(false)
       }
     }
     else {
@@ -333,15 +331,16 @@ const Stats = (props) => {
       const temp = await getDataFromLocalStorage('user_id')
       var formdata = new FormData();
       formdata.append("user_id", JSON.parse(temp));
-      formdata.append("valuename", "fasting");
       formdata.append("type", "Sugar");
-      formdata.append("value", fastingSugar);
+      formdata.append("fasting", fastingSugar);
+      formdata.append("nonfasting", nonFastingSugar);
 
-      const result = await PostApiData('updateuserpaidhealthplan', formdata)
+      const result = await PostApiData('updateuserhealthplan', formdata)
       if (result.status == 200) {
         getDataForPaidUser()
+        setEditSugar(false)
         ShortToast('Success', 'success', '')
-        setEditFastingSugar(false)
+
       }
       //  }
       {/*  else {
@@ -376,7 +375,7 @@ const Stats = (props) => {
       const result = await PostApiData('updateuserpaidhealthplan', formdata)
       if (result.status == 200) {
         getDataForPaidUser()
-        setEditNonFastingSugar(false)
+        setEditSugar(false)
       }
     }
     else {
@@ -391,12 +390,12 @@ const Stats = (props) => {
       if (result.status == 200) {
         getDataForPaidUser()
         ShortToast('Success', 'success', '')
-        setEditNonFastingSugar(false)
+        setEditSugar(false)
       }
     }
   }
-  const updateValueSystolicBp = async () => {
-    if (systolic == "") {
+  const updateBpValues = async () => {
+    if (systolic == "" || diastolic == "" || bpm == "") {
       ShortToast('Required Field', 'error', '')
     }
     else {
@@ -404,15 +403,16 @@ const Stats = (props) => {
       const temp = await getDataFromLocalStorage('user_id')
       var formdata = new FormData();
       formdata.append("user_id", JSON.parse(temp));
-      formdata.append("valuename", "systolic");
       formdata.append("type", "Blood Pressure");
-      formdata.append("value", systolic);
+      formdata.append("systolic", systolic);
+      formdata.append("diastolic", diastolic);
+      formdata.append("bpm", bpm);
 
-      const result = await PostApiData('updateuserpaidhealthplan', formdata)
+      const result = await PostApiData('updateuserhealthplan', formdata)
       if (result.status == 200) {
         getDataForPaidUser()
         { flagg2 > 2 ? null : ShortToast('Success', 'success', '') }
-        setEditSystolic(false)
+        setEditBp(false)
       }
     }
   }
@@ -435,7 +435,7 @@ const Stats = (props) => {
       if (result.status == 200) {
         getDataForPaidUser()
         { flagg1 > 2 ? null : ShortToast('Success', 'success', 'Success') }
-        setEditDiastolic(false)
+        setEditBp(false)
       }
     }
   }
@@ -456,32 +456,33 @@ const Stats = (props) => {
       if (result.status == 200) {
         getDataForPaidUser()
         ShortToast('Success', 'success', '')
-        setEditBpm(false)
+        setEditBp(false)
       }
     }
   }
 
   const handleTextPress = (t) => {
     if (t == "Current Weight") {
-      setEditCurrentWeight(true)
+      setEditWeights(true)
     }
     else if (t == "Target Weight") {
-      setEditTargetWeight(true)
+      // setEditTargetWeight(true)
+      setEditWeights(true)
     }
     else if (t == "Fasting") {
-      setEditFastingSugar(true)
+      setEditSugar(true)
     }
     else if (t == "Non-Fasting") {
-      setEditNonFastingSugar(true)
+      setEditSugar(true)
     }
     else if (t == "Systolic") {
-      setEditSystolic(true)
+      setEditBp(true)
     }
     else if (t == "Diastolic") {
-      setEditDiastolic(true)
+      setEditBp(true)
     }
     else if (t == "BPM") {
-      setEditBpm(true)
+      setEditBp(true)
     }
   }
 
@@ -518,7 +519,16 @@ const Stats = (props) => {
     formdata.append("user_id", JSON.parse(temp))
     const result = await PostApiData('paiduser', formdata)
     console.log("PAID +++++++++++++ ", result)
-    setDataForPaidUser(result)
+    if (result?.status == "200") {
+      setDataForPaidUser(result)
+      setCurrentWeight(result?.single[0]?.attribute_value[0])
+      setTargetWeight(result?.single[0]?.attribute_value[1])
+      setFastingSugar(result?.single[1]?.attribute_value[0])
+      setNonFastingSugar(result?.single[1]?.attribute_value[1])
+      setSystolic(result?.single[2]?.attribute_value[0])
+      setDiastolic(result?.single[2]?.attribute_value[1])
+      setBpm(result?.single[2]?.attribute_value[2])
+    }
   }
   const getName = async () => {
     var formdata = new FormData();
@@ -552,6 +562,9 @@ const Stats = (props) => {
         SelectedOption={data?.data[i]?.selected_number}
         onPressScroll={onPressScroll}
         onPressButton={onPressButton}
+        onPressWeight={setEditWeights}
+        onPressSugar={setEditSugar}
+        onPressBP={setEditBp}
       />
 
     );
@@ -671,7 +684,7 @@ const Stats = (props) => {
                 item.heading == 'Blood Pressure' && props.navigation.navigate("OnDetailsSubmitScreenThree")
 
 
-                 //item.heading == 'Health Index' && props.navigation.navigate("YourHealthIndexForFreeUser", { "healthIndex": data?.healthindex[0]?.value })
+                //item.heading == 'Health Index' && props.navigation.navigate("YourHealthIndexForFreeUser", { "healthIndex": data?.healthindex[0]?.value })
 
                 // if (data?.user_type == "3" || data?.user_type == "2") {
 
@@ -848,6 +861,8 @@ const Stats = (props) => {
     // setLoader(false)
   }
 
+  //console.log("OnPressBP", BPPopUp)
+
   return (
 
 
@@ -881,7 +896,7 @@ const Stats = (props) => {
 
 
             <>
-            {/* <View  onPress={()=>{}}
+              {/* <View  onPress={()=>{}}
             
             style={{
               flexDirection: "column", height: H * 0.1, position: "absolute",
@@ -920,7 +935,7 @@ const Stats = (props) => {
             <View style={{
               flexDirection: "column", height: H * 0.1, position: "absolute",
               alignSelf: "center", top: H * 0.015,
-              width:W*0.4, 
+              width: W * 0.4,
             }}>
 
 
@@ -931,9 +946,9 @@ const Stats = (props) => {
               </TouchableOpacity>
 
               <Text style={{
-                textAlign: "center", fontFamily: fontFamily.bold, 
+                textAlign: "center", fontFamily: fontFamily.bold,
                 width: W * 0.4,
-               
+
               }}>{strings.hello}, {name}</Text>
 
             </View>
@@ -952,9 +967,7 @@ const Stats = (props) => {
                 justifyContent: "center"
               }}>
               <Image
-
                 onPress={() => { props.navigation.navigate("MoreNavigation") }}  //modified
-
                 source={require('../../../../assets/icons/menu.png')}
                 style={{
                   height: 27,
@@ -1086,18 +1099,19 @@ const Stats = (props) => {
             </>
             :
             <></>}
-          { /*<Walkthrough />*/}
 
+          {/*Edit Weights Modal*/}
           <Modal
             style={{
-              backgroundColor: "red"
+
             }}
             animationType="fade"
             transparent={true}
-            visible={editCurrentWeight}>
+            visible={editWeights}>
+
+            {/* Input Weights Pop Up */}
+
             <View style={{
-              height: H * 0.28,
-              width: W * 0.7,
               backgroundColor: colors.OFFWHITE,
               borderRadius: 10,
               alignSelf: "center",
@@ -1105,6 +1119,7 @@ const Stats = (props) => {
               alignItems: "center",
               top: H * 0.35,
               elevation: 5,
+              padding: 10,
             }}>
 
               <Image source={require('../../../../assets/icons/weight-loss.png')}
@@ -1113,12 +1128,14 @@ const Stats = (props) => {
                   width: H * 0.05,
                   marginBottom: H * 0.02,
                 }} />
+              {/* Current Weight Input Container */}
               <View style={{
                 flexDirection: "row",
                 alignItems: "center"
               }}>
                 <Text style={{
-                  fontFamily: "Montserrat-SemiBold"
+                  fontFamily: "Montserrat-SemiBold",
+                  width: W * 0.2
                 }}> {strings.CurrentWeight} </Text>
                 <TextInput
                   value={currentWeight}
@@ -1149,80 +1166,15 @@ const Stats = (props) => {
                   marginLeft: W * 0.01
                 }}></Text>
               </View>
-              <View style={{ flexDirection: "row", width: W * 0.5, justifyContent: "space-evenly" }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    updateValueCurrentWeight()
-
-                  }}
-                  style={{
-                    width: W * 0.18,
-                    height: H * 0.04,
-                    backgroundColor: colors.GREEN,
-                    borderRadius: 5,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginTop: H * 0.03,
-
-                  }}>
-                  <Text style={{
-                    color: "white"
-                  }}>{strings.Ok}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    setEditCurrentWeight(false)
-                  }}
-                  style={{
-                    width: W * 0.18,
-                    height: H * 0.04,
-                    backgroundColor: "white",
-                    borderRadius: 5,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginTop: H * 0.03,
-
-                  }}>
-                  <Text style={{
-                    color: colors.FONT_BLACK
-                  }}>{strings.Cancel}</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-
-          </Modal>
-          {/**Edit Current Weight///////////////////////////////////////////////// */}
-          {/**Edit Target Weight///////////////////////////////////////////////// */}
-          <Modal
-            style={{
-              backgroundColor: "red"
-            }}
-            animationType="fade"
-            transparent={true}
-            visible={editTargetWeight}>
-            <View style={{
-              height: H * 0.28,
-              width: W * 0.7,
-              backgroundColor: colors.OFFWHITE,
-              borderRadius: 10,
-              alignSelf: "center",
-              justifyContent: "center",
-              alignItems: "center",
-              top: H * 0.35,
-              elevation: 5,
-            }}>
-              <Image source={require('../../../../assets/icons/weight-loss.png')}
-                style={{
-                  height: H * 0.05,
-                  width: H * 0.05,
-                  marginBottom: H * 0.02,
-                }} />
+              {/* Target Weight Input Container */}
               <View style={{
                 flexDirection: "row",
-                alignItems: "center"
+                alignItems: "center",
+                marginTop: 10
               }}>
                 <Text style={{
-                  fontFamily: "Montserrat-SemiBold"
+                  fontFamily: "Montserrat-SemiBold",
+                  width: W * 0.2
                 }}>{strings.Targetweight} </Text>
                 <TextInput
                   underlineColor={colors.GREEN}
@@ -1256,14 +1208,10 @@ const Stats = (props) => {
                   marginLeft: W * 0.01
                 }}></Text>
               </View>
-              <View style={{
-                flexDirection: "row",
-                justifyContent: "space-evenly",
-                width: W * 0.5
-              }}>
+              <View style={{ flexDirection: "row", width: W * 0.5, justifyContent: "space-evenly" }}>
                 <TouchableOpacity
                   onPress={() => {
-                    updateValueTargetWeight()
+                    updateWeightValues()
 
                   }}
                   style={{
@@ -1282,7 +1230,7 @@ const Stats = (props) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    setEditTargetWeight(false)
+                    setEditWeights(false)
                   }}
                   style={{
                     width: W * 0.18,
@@ -1301,7 +1249,7 @@ const Stats = (props) => {
               </View>
             </View>
           </Modal>
-          {/**Edit Target Weight///////////////////////////////////////////////// */}
+
           {/**Edit Fasting Sugar///////////////////////////////////////////////// */}
           <Modal
             style={{
@@ -1309,9 +1257,9 @@ const Stats = (props) => {
             }}
             animationType="fade"
             transparent={true}
-            visible={editFastingSugar}>
+            visible={editSugar}>
             <View style={{
-              height: H * 0.28,
+              padding: 10,
               width: W * 0.7,
               backgroundColor: colors.OFFWHITE,
               borderRadius: 10,
@@ -1327,12 +1275,14 @@ const Stats = (props) => {
                   width: H * 0.05,
                   marginBottom: H * 0.02,
                 }} />
+              {/* Fasting Input View */}
               <View style={{
                 flexDirection: "row",
                 alignItems: "center"
               }}>
                 <Text style={{
-                  fontFamily: "Montserrat-SemiBold"
+                  fontFamily: "Montserrat-SemiBold",
+                  width: W * 0.2
                 }}>{strings.fasting} </Text>
                 <TextInput
                   onChangeText={(t) => {
@@ -1377,6 +1327,62 @@ const Stats = (props) => {
                   marginLeft: W * 0.01
                 }}></Text>
               </View>
+              {/* Non Fasting Input View */}
+              <View style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 10,
+              }}>
+                <Text style={{
+                  fontFamily: "Montserrat-SemiBold",
+                  width: W * 0.2
+                }}>{strings.nonfating} </Text>
+
+                <TextInput
+                  onChangeText={(t) => {
+                    if (t == '0') {
+                      ShortToast('Invalid Input', 'error', '')
+                    }
+                    else if (t <= 90) {
+                      setNonFastingSugar(t)
+                    }
+                    else if (t >= 90 && t <= 140) {
+                      setNonFastingSugar(t)
+                    }
+                    else if (t > 140 && t <= 210) {
+                      ShortToast("Your Non Fasting Sugar Seems to be Elevated", 'warning', '')
+                      setNonFastingSugar(t)
+                    }
+                    else if (t > 210 && t <= 300) {
+                      ShortToast("Your Non Fasting Sugar Seems to be High (Stage 1)", 'error', '')
+                      setNonFastingSugar(t)
+                    }
+                    else if (t > 300 && t <= 380) {
+                      ShortToast("Your Non Fasting Sugar Seems to be High (Stage 2)", 'error', '')
+                      setNonFastingSugar(t)
+                    }
+                    else if (t > 380) {
+                      ShortToast("Your Non Fasting Sugar Seems To Be Critical. Please Consult A Doctor!", 'error', '')
+                    }
+                  }}
+                  value={nonFastingSugar}
+                  underlineColor={colors.GREEN}
+                  activeUnderlineColor={colors.GREEN}
+                  style={{
+                    width: W * 0.2,
+                    height: H * 0.07,
+                    alignSelf: "center",
+                    backgroundColor: "white"
+                  }}
+                  keyboardType="number-pad"
+                  maxLength={3}
+                />
+                <Text style={{
+                  color: colors.FONT_BLACK,
+                  marginLeft: W * 0.01
+                }}></Text>
+              </View>
+              {/* Touch and Cancel Button Container View*/}
               <View style={{
                 flexDirection: "row",
                 justifyContent: "space-evenly",
@@ -1384,7 +1390,7 @@ const Stats = (props) => {
               }}>
                 <TouchableOpacity
                   onPress={() => {
-                    updateValueFastingSugar()
+                    updateSugarValues()
 
                   }}
                   style={{
@@ -1404,7 +1410,7 @@ const Stats = (props) => {
                 <TouchableOpacity
                   onPress={() => {
                     setFastingSugar("")
-                    setEditFastingSugar(false)
+                    setEditSugar(false)
                   }}
                   style={{
                     width: W * 0.18,
@@ -1431,7 +1437,7 @@ const Stats = (props) => {
             }}
             animationType="fade"
             transparent={true}
-            visible={editNonFastingSugar}>
+            visible={false}>
             <View style={{
               height: H * 0.28,
               width: W * 0.7,
@@ -1507,7 +1513,7 @@ const Stats = (props) => {
               }}>
                 <TouchableOpacity
                   onPress={() => {
-                    updateValueNonFastingSugar()
+                    // updateValueNonFastingSugar()
 
                   }}
                   style={{
@@ -1527,7 +1533,7 @@ const Stats = (props) => {
                 <TouchableOpacity
                   onPress={() => {
                     setNonFastingSugar("")
-                    setEditNonFastingSugar(false)
+                    setEditSugar(false)
                   }}
                   style={{
                     width: W * 0.18,
@@ -1550,14 +1556,13 @@ const Stats = (props) => {
           {/**Edit Systolic///////////////////////////////////////////////// */}
           <Modal
             style={{
-              backgroundColor: "red"
+
             }}
             animationType="fade"
             transparent={true}
-            visible={editSystolic}>
+            visible={editBp}>
             <View style={{
-              height: H * 0.28,
-              width: W * 0.7,
+              padding: 10,
               backgroundColor: colors.OFFWHITE,
               borderRadius: 10,
               alignSelf: "center",
@@ -1572,11 +1577,13 @@ const Stats = (props) => {
                   width: H * 0.05,
                   marginBottom: H * 0.02,
                 }} />
+              {/* Systolic BP Input Container */}
               <View style={{
                 flexDirection: "row",
                 alignItems: "center"
               }}>
                 <Text style={{
+                  width: W * 0.2,
                   fontFamily: "Montserrat-SemiBold"
                 }}>{strings.systolicBP}</Text>
                 <TextInput
@@ -1601,6 +1608,78 @@ const Stats = (props) => {
                   marginLeft: W * 0.01
                 }}></Text>
               </View>
+
+              {/* Diastolic BP Input Container */}
+
+              <View style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 10,
+              }}>
+                <Text style={{
+                  width: W * 0.2,
+                  fontFamily: "Montserrat-SemiBold"
+                }}>{strings.diastolicBP}</Text>
+                <TextInput
+                  value={diastolic}
+                  onChangeText={(t) => {
+                    if (t == '0') {
+                      ShortToast('Invalid Input', 'error', '')
+                    }
+                    else
+                      setDiastolic(t)
+                  }}
+                  underlineColor={colors.GREEN}
+                  activeUnderlineColor={colors.GREEN}
+                  style={{
+                    width: W * 0.2,
+                    height: H * 0.07,
+                    alignSelf: "center",
+                    backgroundColor: "white"
+                  }}
+                  keyboardType="number-pad" />
+                <Text style={{
+                  color: colors.FONT_BLACK,
+                  marginLeft: W * 0.01
+                }}></Text>
+              </View>
+
+              {/* BPM BP Input Container */}
+
+              <View style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 10,
+              }}>
+                <Text style={{
+                  width: W * 0.2,
+                  fontFamily: "Montserrat-SemiBold"
+                }}>{strings.BPM}</Text>
+                <TextInput
+                  onChangeText={(t) => {
+                    if (t == '0') {
+                      ShortToast('Invalid Input', 'error', '')
+                    }
+                    else
+                      setBpm(t)
+                  }}
+                  value={bpm}
+                  underlineColor={colors.GREEN}
+                  activeUnderlineColor={colors.GREEN}
+                  style={{
+                    width: W * 0.2,
+                    height: H * 0.07,
+                    alignSelf: "center",
+                    backgroundColor: "white"
+                  }}
+                  keyboardType="number-pad" />
+                <Text style={{
+                  color: colors.FONT_BLACK,
+                  marginLeft: W * 0.01
+                }}></Text>
+              </View>
+
+              {/* BP Input and Cancel Button Container */}
               <View style={{
                 flexDirection: "row",
                 justifyContent: "space-evenly",
@@ -1613,7 +1692,7 @@ const Stats = (props) => {
                       if (systolic < 85 || systolic > 180) {
                         if (flagg2 > 2) {
                           ShortToast("Your Systolic BP Level Seems to be Critcial, Kindly consult a Doctor", 'error', '')
-                          updateValueSystolicBp()
+                          updateBpValues()
                         }
                         else {
                           setFlagg2(prev => prev + 1)
@@ -1622,7 +1701,7 @@ const Stats = (props) => {
                         }
                       }
                       else {
-                        updateValueSystolicBp()
+                        updateBpValues()
                       }
                     }
                   }}
@@ -1643,7 +1722,7 @@ const Stats = (props) => {
                 <TouchableOpacity
                   onPress={() => {
                     setSystolic("")
-                    setEditSystolic(false)
+                    setEditBp(false)
                   }}
                   style={{
                     width: W * 0.18,
@@ -1670,7 +1749,7 @@ const Stats = (props) => {
             }}
             animationType="fade"
             transparent={true}
-            visible={editDiastolic}>
+            visible={false}>
             <View style={{
               height: H * 0.28,
               width: W * 0.7,
@@ -1730,7 +1809,7 @@ const Stats = (props) => {
                       if (diastolic < 55 || diastolic > 120) {
                         if (flagg1 > 2) {
                           ShortToast("Your Diastolic BP Level Seems to be Critical, Kindly Consult a Doctor", 'error', '')
-                          updateValueDiastolicBp()
+                          //updateValueDiastolicBp()
                         }
                         else {
                           setFlagg1(prev => prev + 1)
@@ -1739,7 +1818,7 @@ const Stats = (props) => {
                         }
                       }
                       else {
-                        updateValueDiastolicBp()
+                        //updateValueDiastolicBp()
                       }
 
 
@@ -1762,7 +1841,7 @@ const Stats = (props) => {
                 <TouchableOpacity
                   onPress={() => {
                     setDiastolic("")
-                    setEditDiastolic(false)
+                    setEditBp(false)
                   }}
                   style={{
                     width: W * 0.18,
@@ -1789,7 +1868,7 @@ const Stats = (props) => {
             }}
             animationType="fade"
             transparent={true}
-            visible={editBpm}>
+            visible={false}>
             <View style={{
               height: H * 0.28,
               width: W * 0.7,
@@ -1854,7 +1933,7 @@ const Stats = (props) => {
                         setBpm("")
                       }
                       else {
-                        updateValueBpmBp()
+                        //updateValueBpmBp()
                       }
                     }
                   }}
@@ -1875,7 +1954,7 @@ const Stats = (props) => {
                 <TouchableOpacity
                   onPress={() => {
                     setBpm("")
-                    setEditBpm(false)
+                    setEditBp(false)
                   }}
                   style={{
                     width: W * 0.18,
@@ -2063,7 +2142,7 @@ const Stats = (props) => {
                   {strings.Pleaseentergratitude}
                 </Text>
 
-                
+
 
                 <>
                   <TextInput
