@@ -9,7 +9,7 @@ const Logo = () => {
             <Image source={require('../../../assets/icons/LNF2.png')}
                 style={{
                     height: H * 0.09,
-                    aspectRatio: 29 / 11,
+                    aspectRatio: 29 / 11
                 }} />
         </View>
     )
