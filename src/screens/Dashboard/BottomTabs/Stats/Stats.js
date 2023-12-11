@@ -1112,6 +1112,7 @@ const Stats = (props) => {
             {/* Input Weights Pop Up */}
 
             <View style={{
+              width: W * 0.8,
               backgroundColor: colors.OFFWHITE,
               borderRadius: 10,
               alignSelf: "center",
@@ -1133,10 +1134,7 @@ const Stats = (props) => {
                 flexDirection: "row",
                 alignItems: "center"
               }}>
-                <Text style={{
-                  fontFamily: "Montserrat-SemiBold",
-                  width: W * 0.2
-                }}> {strings.CurrentWeight} </Text>
+                <Text style={styles.attributeHeading}> {strings.CurrentWeight} </Text>
                 <TextInput
                   value={currentWeight}
                   onChangeText={(t) => {
@@ -1172,10 +1170,7 @@ const Stats = (props) => {
                 alignItems: "center",
                 marginTop: 10
               }}>
-                <Text style={{
-                  fontFamily: "Montserrat-SemiBold",
-                  width: W * 0.2
-                }}>{strings.Targetweight} </Text>
+                <Text style={styles.attributeHeading}>{strings.Targetweight} </Text>
                 <TextInput
                   underlineColor={colors.GREEN}
                   onChangeText={(t) => {
@@ -1268,6 +1263,7 @@ const Stats = (props) => {
               alignItems: "center",
               top: H * 0.35,
               elevation: 5,
+              width: W * 0.8,
             }}>
               <Image source={require('../../../../assets/icons/glucose-meter.png')}
                 style={{
@@ -1280,10 +1276,7 @@ const Stats = (props) => {
                 flexDirection: "row",
                 alignItems: "center"
               }}>
-                <Text style={{
-                  fontFamily: "Montserrat-SemiBold",
-                  width: W * 0.2
-                }}>{strings.fasting} </Text>
+                <Text style={styles.attributeHeading}>{strings.fasting} </Text>
                 <TextInput
                   onChangeText={(t) => {
                     if (t == '0') {
@@ -1333,10 +1326,7 @@ const Stats = (props) => {
                 alignItems: "center",
                 marginTop: 10,
               }}>
-                <Text style={{
-                  fontFamily: "Montserrat-SemiBold",
-                  width: W * 0.2
-                }}>{strings.nonfating} </Text>
+                <Text style={styles.attributeHeading}>{strings.nonfating} </Text>
 
                 <TextInput
                   onChangeText={(t) => {
@@ -1570,6 +1560,7 @@ const Stats = (props) => {
               alignItems: "center",
               top: H * 0.35,
               elevation: 5,
+              width: W * 0.8,
             }}>
               <Image source={require('../../../../assets/icons/hypertension.png')}
                 style={{
@@ -1582,10 +1573,7 @@ const Stats = (props) => {
                 flexDirection: "row",
                 alignItems: "center"
               }}>
-                <Text style={{
-                  width: W * 0.2,
-                  fontFamily: "Montserrat-SemiBold"
-                }}>{strings.systolicBP}</Text>
+                <Text style={styles.attributeHeading}>{strings.systolicBP}</Text>
                 <TextInput
                   onChangeText={(t) => {
                     if (t == '0') {
@@ -1616,10 +1604,7 @@ const Stats = (props) => {
                 alignItems: "center",
                 marginTop: 10,
               }}>
-                <Text style={{
-                  width: W * 0.2,
-                  fontFamily: "Montserrat-SemiBold"
-                }}>{strings.diastolicBP}</Text>
+                <Text style={styles.attributeHeading}>{strings.diastolicBP}</Text>
                 <TextInput
                   value={diastolic}
                   onChangeText={(t) => {
@@ -1651,10 +1636,7 @@ const Stats = (props) => {
                 alignItems: "center",
                 marginTop: 10,
               }}>
-                <Text style={{
-                  width: W * 0.2,
-                  fontFamily: "Montserrat-SemiBold"
-                }}>{strings.BPM}</Text>
+                <Text style={styles.attributeHeading}>{strings.BPM}</Text>
                 <TextInput
                   onChangeText={(t) => {
                     if (t == '0') {
@@ -2605,6 +2587,11 @@ const styles = StyleSheet.create({
     height: HEIGHT * 0.08,
     width: WIDTH,
     paddingHorizontal: WIDTH * 0.02
+  },
+  attributeHeading:
+  {
+    fontFamily: "Montserrat-SemiBold",
+    width: W * 0.3
   }
 
 
