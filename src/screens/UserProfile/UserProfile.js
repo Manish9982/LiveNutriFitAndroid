@@ -340,7 +340,7 @@ const UserProfile = ({ navigation }) => {
 
                         <View style={{ justifyContent: 'center' }}>
                             <Text style={styles.text2}>{dataFromApi?.data[0].name}</Text>
-                            <Text style={styles.text1}>{dataFromApi?.data?.[0]?.food_type?.answer.join(",")}</Text>
+                            <Text style={styles.text1}>{dataFromApi?.data?.[0]?.food_profile}</Text>
                         </View>
                     </View>
 
