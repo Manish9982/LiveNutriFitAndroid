@@ -2477,7 +2477,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     height: H * 0.11,
     width: H * 0.44,
-    top: -H * 0.22,
+    top: - H * 0.22,
     left: - H * 0.22,
   },
   title10:

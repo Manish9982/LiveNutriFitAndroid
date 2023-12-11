@@ -120,7 +120,7 @@ export const PostApiData = async (ApiName, formdata) => {
       const token = await getDataFromLocalStorage('Token')
       console.log("TOKEN == ", token)
       var myHeaders = new Headers();
-      myHeaders.append("Authorization", `Bearer ${token}`);
+      myHeaders.append("Authorization", `Bearer ${token}`); 
       var requestOptions = {
          method: 'POST',
          redirect: 'follow',
